@@ -53,7 +53,7 @@ func (g *Group) String() string {
 
 	var result string
 	if g.Title != "" {
-		result += g.Title + "\n"
+		result += "### " + g.Title + "\n"
 	}
 
 	for _, commit := range g.Commits {
