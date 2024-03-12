@@ -53,6 +53,7 @@ func run(cmd *cobra.Command, args []string) error {
 	}); err != nil && !errors.Is(err, io.EOF) {
 		return err
 	}
+	tags.Close()
 
 	commits, err := repo.Log(&git.LogOptions{})
 	if err != nil {
@@ -83,6 +84,7 @@ func run(cmd *cobra.Command, args []string) error {
 			}
 		}
 	}
+	commits.Close()
 
 	fmt.Println("## Changelog")
 	slices.SortStableFunc(conf.Groups, func(a, b *config.Group) int {
