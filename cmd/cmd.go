@@ -15,6 +15,8 @@ func New() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:  "changelog-generator",
 		RunE: run,
+
+		DisableAutoGenTag: true,
 	}
 
 	cmd.PersistentFlags().String("config", "", `Config file (default ".changelog-generator.yaml")`)
