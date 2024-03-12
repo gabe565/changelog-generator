@@ -49,3 +49,7 @@ jobs:
         with:
           body: ${{ steps.changelog.outputs.changelog }}
 ```
+
+## Configuration
+
+Configuration is loaded from `.changelog-generator.yaml` in the git repo root. See the [config example](config_example.yaml) for more details.
