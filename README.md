@@ -56,3 +56,5 @@ jobs:
 ## Configuration
 
 Configuration is loaded from `.changelog-generator.yaml` in the git repo root. See the [config example](config_example.yaml) for more details.
+
+If `.changelog-generator.yaml` is not found, Changelog Generator will attempt to load the `changelog` key from `.goreleaser.yaml`.
