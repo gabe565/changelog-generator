@@ -2,7 +2,7 @@
 # When empty, the order will match `git log`.
 #
 # Values: asc, desc, empty.
-# Default: empty
+# Default: asc
 sort: asc
 
 # Shortens the commit hashes.

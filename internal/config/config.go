@@ -12,6 +12,7 @@ type Config struct {
 
 func NewDefault() *Config {
 	return &Config{
+		Sort:   SortAscending,
 		Abbrev: 8,
 	}
 }
