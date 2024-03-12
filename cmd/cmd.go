@@ -57,6 +57,15 @@ func run(cmd *cobra.Command, args []string) error {
 	}
 	tags.Close()
 
+	head, err := repo.Reference(plumbing.HEAD, true)
+	if err != nil {
+		return err
+	}
+	if head.Hash() != latest.Hash() {
+		previous = latest
+		latest = head
+	}
+
 	commits, err := repo.Log(&git.LogOptions{})
 	if err != nil {
 		return err
