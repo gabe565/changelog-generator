@@ -87,6 +87,9 @@ runs:
         output: ${{ inputs.path }}
       run: |
         changelog="$(changelog-generator)"
+        echo '::group::Generated Changelog'
+        echo "$changelog"
+        echo '::endgroup::'
         {
           echo 'changelog<<EOF'
           echo "$changelog"
