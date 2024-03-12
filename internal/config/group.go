@@ -27,7 +27,8 @@ type Group struct {
 
 func (g *Group) Matches(c *object.Commit) bool {
 	if g.re != nil {
-		return g.re.MatchString(c.Message)
+		shortMessage := util.ShortMessage(c)
+		return g.re.MatchString(shortMessage)
 	}
 	return true
 }
