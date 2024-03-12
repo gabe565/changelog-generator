@@ -1,0 +1,76 @@
+name: Changelog Generator
+description: Generates a changelog from commits since the previous release.
+branding:
+  icon: list
+  color: purple
+inputs:
+  token:
+    description: GitHub token
+    default: ${{ github.token }}
+outputs:
+  changelog:
+    description: The generated changelog markdown
+    value: ${{ steps.changelog.outputs.changelog }}
+runs:
+  using: composite
+  steps:
+    - id: install
+      name: Install Changelog Generator
+      shell: bash
+      env:
+        GH_TOKEN: ${{ inputs.token }}
+        GH_REPO: gabe565/changelog-generator
+        GH_ACTION_REF: ${{ github.action_ref }}
+      run: |
+        set -euo pipefail
+
+        case "${{ runner.os }}" in
+          Linux)
+            OS=linux
+            FILENAME=changelog-generator
+            ;;
+          macOS)
+            OS=darwin
+            FILENAME=changelog-generator
+            ;;
+          Windows)
+            OS=windows
+            FILENAME=changelog-generator.exe
+            ;;
+        esac
+        
+        RELEASE="$(gh release view --json=name,assets "$GH_ACTION_REF")"
+        if [[ -z "$RELEASE" ]]; then
+          RELEASE="$(gh release view --json=name,assets)"
+        fi
+        VERSION="$(jq -r '.name' <<<"$RELEASE")"
+        echo "version=$VERSION" >>$GITHUB_OUTPUT
+        echo "Installing changelog generator $VERSION..."
+
+        DEST="$RUNNER_TEMP/changelog-generator"
+        URL="$(jq -r --arg OS "$OS" \
+          '.assets[] | select(.name | ascii_downcase | test($OS + "_(amd64|x86_64).(tar.gz|zip)$")) | .url' \
+          <<<"$RELEASE" \
+        )"
+
+        echo "Downloading $URL"
+        mkdir -p "$DEST"
+        cd "$DEST"
+        case "$URL" in
+          *.tar.gz)
+            curl -sfL "$URL" | tar -xzf - "$FILENAME";;
+          *.zip)
+            curl -sfL -o app.zip "$URL"
+            unzip app.zip "$FILENAME"
+            rm app.zip
+            ;;
+          *)
+            echo Invalid file type; exit 1;;
+        esac
+        echo "$DEST" >>$GITHUB_PATH
+    - id: changelog
+      shell: bash
+      run: |
+        echo "changelog<<EOF" >> $GITHUB_OUTPUT
+        changelog-generator >> $GITHUB_OUTPUT
+        echo "EOF" >> $GITHUB_OUTPUT
