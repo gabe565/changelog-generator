@@ -46,9 +46,11 @@ func run(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
+	var latest *plumbing.Reference
 	var previous *plumbing.Reference
 	if err := tags.ForEach(func(reference *plumbing.Reference) error {
-		previous = reference
+		previous = latest
+		latest = reference
 		return nil
 	}); err != nil && !errors.Is(err, io.EOF) {
 		return err
