@@ -7,6 +7,8 @@ inputs:
   config:
     description: Path to the config file
     default: ${{ github.workspace }}/.changelog-generator.yaml
+  path:
+    description: Generated changelog path
   token:
     description: GitHub token
     default: ${{ github.token }}
@@ -81,9 +83,15 @@ runs:
         echo "$DEST" >>$GITHUB_PATH
     - id: changelog
       shell: bash
+      env:
+        output: ${{ inputs.path }}
       run: |
+        changelog="$(changelog-generator)"
         {
           echo 'changelog<<EOF'
-          changelog-generator
+          echo "$changelog"
           echo EOF
         } >> $GITHUB_OUTPUT
+        if [[ -n "$output" ]]; then
+          echo "$changelog" > "$output"
+        fi
