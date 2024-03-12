@@ -82,6 +82,8 @@ runs:
     - id: changelog
       shell: bash
       run: |
-        echo "changelog<<EOF" >> $GITHUB_OUTPUT
-        changelog-generator >> $GITHUB_OUTPUT
-        echo "EOF" >> $GITHUB_OUTPUT
+        {
+          echo 'changelog<<EOF'
+          changelog-generator
+          echo EOF
+        } >> $GITHUB_OUTPUT
