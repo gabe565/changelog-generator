@@ -12,9 +12,10 @@ A configurable commit-based changelog generator. It finds commits since the prev
 
 #### Inputs
 
-| Name    | Description                                | Default             |
-|---------|--------------------------------------------|---------------------|
-| `token` | GitHub token used to fetch release assets. | `${{ github.token }}` |
+| Name     | Description                                | Default                     |
+|----------|--------------------------------------------|-----------------------------|
+| `config` | Path to the config file.                   | `.changelog-generator.yaml` |
+| `token`  | GitHub token used to fetch release assets. | `${{ github.token }}`       |
 
 #### Outputs
 
