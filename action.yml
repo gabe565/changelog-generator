@@ -39,7 +39,15 @@ runs:
             ;;
         esac
         
-        RELEASE="$(gh release view --json=name,assets "$GH_ACTION_REF")"
+        case "$GH_ACTION_REF" in
+          v*.*.*)
+            RELEASE="$(gh release view --json=name,assets "$GH_ACTION_REF")" ;;
+          v*)
+            GH_ACTION_REF="$(gh release list --json=name | jq -r --arg major "$GH_ACTION_REF" '[.[].name | select(startswith($major))] | first')"
+            RELEASE="$(gh release view --json=name,assets "$GH_ACTION_REF")" ;;
+          *)
+            RELEASE="$(gh release view --json=name,assets)" ;;
+        esac
         if [[ -z "$RELEASE" ]]; then
           RELEASE="$(gh release view --json=name,assets)"
         fi
