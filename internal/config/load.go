@@ -3,6 +3,8 @@
 package config
 
 import (
+	"errors"
+	"os"
 	"regexp"
 
 	"github.com/knadh/koanf/parsers/yaml"
@@ -32,7 +34,7 @@ func Load(cmd *cobra.Command) (*Config, error) {
 
 	// Parse config file
 	parser := yaml.Parser()
-	if err := k.Load(file.Provider(cfgFile), parser); err != nil {
+	if err := k.Load(file.Provider(cfgFile), parser); err != nil && !errors.Is(err, os.ErrNotExist) {
 		return nil, err
 	}
 
