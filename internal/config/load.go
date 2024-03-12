@@ -47,6 +47,9 @@ func Load(cmd *cobra.Command) (*Config, error) {
 		}
 		g.re = re
 	}
+	if len(conf.Groups) == 0 {
+		conf.Groups = append(conf.Groups, &Group{})
+	}
 
 	for _, exclude := range conf.Filters.Exclude {
 		re, err := regexp.Compile(exclude)

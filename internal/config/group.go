@@ -26,7 +26,10 @@ type Group struct {
 }
 
 func (g *Group) Matches(c *object.Commit) bool {
-	return g.re.MatchString(c.Message)
+	if g.re != nil {
+		return g.re.MatchString(c.Message)
+	}
+	return true
 }
 
 func (g *Group) AddCommit(c *object.Commit) {
