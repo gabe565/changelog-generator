@@ -1,0 +1,41 @@
+# Sorts the changelog by the commit message.
+# When empty, the order will match `git log`.
+#
+# Values: asc, desc, empty.
+# Default: empty
+sort: asc
+
+# Shortens the commit hashes.
+# If set to -1, commit hashes will be excluded.
+#
+# Default: 8
+abbrev: 8
+
+# Groups commits into sections.
+# - title is the group heading.
+# - order determines the sort order of the group.
+# - regexp is matches against the first line of each commit.
+groups:
+  - title: Features
+    order: 0
+    regexp: "^(feat)"
+  - title: Fixes
+    order: 1
+    regexp: "^(fix|perf)"
+  - title: Others
+    order: 999
+
+# Divider is added between each group
+#
+# Default: empty
+divider: "---"
+
+# Shows or hides commits. Each regexp is checked against the first commit message line only.
+# - Exclude is a regexp that will exclude matching commits from the changelog.
+# - Include is a regexp that will include matching commits to the changelog. If set, exclude will be ignored.
+filters:
+  exclude:
+    - "^docs"
+    - "^test"
+  # include:
+  # - "^feat"
