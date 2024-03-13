@@ -36,7 +36,7 @@ func run(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	repo, err := git.PlainOpen(".")
+	repo, err := git.PlainOpenWithOptions(".", &git.PlainOpenOptions{DetectDotGit: true})
 	if err != nil {
 		return err
 	}
