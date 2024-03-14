@@ -8,6 +8,9 @@ inputs:
     description: Path to the config file
     default: ${{ github.workspace }}/.changelog-generator.yaml
   path:
+    description: Path to the local git repository
+    default: .
+  output:
     description: Generated changelog path
   token:
     description: GitHub token
@@ -84,9 +87,10 @@ runs:
     - id: changelog
       shell: bash
       env:
-        output: ${{ inputs.path }}
+        repo: ${{ inputs.path }}
+        output: ${{ inputs.output }}
       run: |
-        changelog="$(changelog-generator)"
+        changelog="$(changelog-generator --repo="$repo")"
         echo '::group::Generated Changelog'
         echo "$changelog"
         echo '::endgroup::'
