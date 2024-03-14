@@ -82,7 +82,7 @@ func run(cmd *cobra.Command, args []string) error {
 	if err != nil {
 		return err
 	}
-	if head.Hash() != latest.Hash() {
+	if latest == nil || head.Hash() != latest.Hash() {
 		previous = latest
 		latest = head
 	}
