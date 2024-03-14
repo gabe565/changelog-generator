@@ -15,6 +15,9 @@ inputs:
   token:
     description: GitHub token
     default: ${{ github.token }}
+  install-only:
+    description: Installs changelog-generator without running it
+    default: "false"
 outputs:
   changelog:
     description: The generated changelog markdown
@@ -85,6 +88,7 @@ runs:
         esac
         echo "$DEST" >>$GITHUB_PATH
     - id: changelog
+      if: inputs.install-only == 'false'
       shell: bash
       env:
         repo: ${{ inputs.path }}
