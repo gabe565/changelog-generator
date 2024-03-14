@@ -8,10 +8,11 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func New() *cobra.Command {
+func New(version, commit string) *cobra.Command {
 	cmd := &cobra.Command{
-		Use:  "changelog-generator",
-		RunE: run,
+		Use:     "changelog-generator",
+		RunE:    run,
+		Version: buildVersion(version, commit),
 
 		ValidArgsFunction: cobra.NoFileCompletions,
 		DisableAutoGenTag: true,
@@ -64,4 +65,11 @@ func run(cmd *cobra.Command, args []string) error {
 
 	_, _ = io.WriteString(cmd.OutOrStdout(), conf.String())
 	return nil
+}
+
+func buildVersion(version, commit string) string {
+	if commit != "" {
+		version += " (" + commit + ")"
+	}
+	return version
 }
