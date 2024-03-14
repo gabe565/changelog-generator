@@ -1,7 +1,7 @@
 package cmd
 
 import (
-	"fmt"
+	"io"
 
 	"github.com/gabe565/changelog-generator/internal/config"
 	"github.com/gabe565/changelog-generator/internal/git"
@@ -62,6 +62,6 @@ func run(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	fmt.Println(conf.String())
+	_, _ = io.WriteString(cmd.OutOrStdout(), conf.String())
 	return nil
 }
