@@ -29,12 +29,12 @@ func New() *cobra.Command {
 }
 
 func run(cmd *cobra.Command, args []string) error {
-	cmd.SilenceUsage = true
-
 	conf, err := config.Load(cmd)
 	if err != nil {
 		return err
 	}
+
+	cmd.SilenceUsage = true
 
 	repo, err := git.PlainOpenWithOptions(".", &git.PlainOpenOptions{DetectDotGit: true})
 	if err != nil {
