@@ -1,5 +1,9 @@
 package config
 
+import (
+	"slices"
+)
+
 var Default = NewDefault()
 
 type Config struct {
@@ -15,4 +19,24 @@ func NewDefault() *Config {
 		Sort:   SortAscending,
 		Abbrev: 8,
 	}
+}
+
+func (c *Config) String() string {
+	var result string
+	result += "## Changelog\n"
+	slices.SortStableFunc(c.Groups, func(a, b *Group) int {
+		return a.Order - b.Order
+	})
+	var hasPrinted bool
+	for _, g := range c.Groups {
+		g.Sort()
+		if s := g.String(); s != "" {
+			if hasPrinted && c.Divider != "" {
+				result += c.Divider + "\n"
+			}
+			hasPrinted = true
+			result += s
+		}
+	}
+	return result
 }
