@@ -20,6 +20,8 @@ func New() *cobra.Command {
 		DisableAutoGenTag: true,
 	}
 
+	registerCompletionFlag(cmd)
+
 	cmd.PersistentFlags().String("config", "", `Config file (default ".changelog-generator.yaml")`)
 	_ = cmd.RegisterFlagCompletionFunc("config", func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
 		return []string{"yaml"}, cobra.ShellCompDirectiveFilterFileExt
@@ -29,6 +31,14 @@ func New() *cobra.Command {
 }
 
 func run(cmd *cobra.Command, args []string) error {
+	completionFlag, err := cmd.Flags().GetString(CompletionFlag)
+	if err != nil {
+		return err
+	}
+	if completionFlag != "" {
+		return completion(cmd, args)
+	}
+
 	conf, err := config.Load(cmd)
 	if err != nil {
 		return err
