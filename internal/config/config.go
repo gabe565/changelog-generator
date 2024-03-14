@@ -1,6 +1,6 @@
 package config
 
-var Default *Config
+var Default = NewDefault()
 
 type Config struct {
 	Sort    string   `yaml:"sort"`
