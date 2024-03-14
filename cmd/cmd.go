@@ -1,14 +1,10 @@
 package cmd
 
 import (
-	"errors"
 	"fmt"
-	"io"
-	"slices"
 
 	"github.com/gabe565/changelog-generator/internal/config"
-	"github.com/go-git/go-git/v5"
-	"github.com/go-git/go-git/v5/plumbing"
+	"github.com/gabe565/changelog-generator/internal/git"
 	"github.com/spf13/cobra"
 )
 
@@ -50,88 +46,22 @@ func run(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	repoPath, err := cmd.Flags().GetString("repo")
-	if err != nil {
-		return err
-	}
-
 	cmd.SilenceUsage = true
 
-	repo, err := git.PlainOpenWithOptions(repoPath, &git.PlainOpenOptions{DetectDotGit: true})
+	repo, err := git.FindRepo(cmd)
 	if err != nil {
 		return err
 	}
 
-	tags, err := repo.Tags()
+	previous, err := git.FindRefs(repo)
 	if err != nil {
 		return err
 	}
 
-	var latest *plumbing.Reference
-	var previous *plumbing.Reference
-	if err := tags.ForEach(func(reference *plumbing.Reference) error {
-		previous = latest
-		latest = reference
-		return nil
-	}); err != nil && !errors.Is(err, io.EOF) {
-		return err
-	}
-	tags.Close()
-
-	head, err := repo.Reference(plumbing.HEAD, true)
-	if err != nil {
-		return err
-	}
-	if latest == nil || head.Hash() != latest.Hash() {
-		previous = latest
-		latest = head
-	}
-
-	commits, err := repo.Log(&git.LogOptions{})
-	if err != nil {
+	if err := git.WalkCommits(repo, conf, previous); err != nil {
 		return err
 	}
 
-	for {
-		ref, err := commits.Next()
-		if err != nil {
-			if errors.Is(err, io.EOF) {
-				break
-			}
-			return err
-		}
-
-		if previous != nil && ref.Hash == previous.Hash() {
-			break
-		}
-
-		if !conf.Filters.Match(ref) {
-			continue
-		}
-
-		for _, g := range conf.Groups {
-			if g.Matches(ref) {
-				g.AddCommit(ref)
-				break
-			}
-		}
-	}
-	commits.Close()
-
-	fmt.Println("## Changelog")
-	slices.SortStableFunc(conf.Groups, func(a, b *config.Group) int {
-		return a.Order - b.Order
-	})
-	var hasPrinted bool
-	for _, g := range conf.Groups {
-		g.Sort()
-		if s := g.String(); s != "" {
-			if hasPrinted && conf.Divider != "" {
-				fmt.Println(conf.Divider)
-			}
-			hasPrinted = true
-			fmt.Print(s)
-		}
-	}
+	fmt.Println(conf.String())
 	return nil
 }
