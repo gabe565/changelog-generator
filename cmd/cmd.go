@@ -27,6 +27,11 @@ func New() *cobra.Command {
 		return []string{"yaml"}, cobra.ShellCompDirectiveFilterFileExt
 	})
 
+	cmd.PersistentFlags().String("repo", ".", `Path to the git repo root. Parent directories will be walked until .git is found.`)
+	_ = cmd.RegisterFlagCompletionFunc("repo", func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
+		return []string{}, cobra.ShellCompDirectiveFilterDirs
+	})
+
 	return cmd
 }
 
@@ -44,9 +49,14 @@ func run(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
+	repoPath, err := cmd.Flags().GetString("repo")
+	if err != nil {
+		return err
+	}
+
 	cmd.SilenceUsage = true
 
-	repo, err := git.PlainOpenWithOptions(".", &git.PlainOpenOptions{DetectDotGit: true})
+	repo, err := git.PlainOpenWithOptions(repoPath, &git.PlainOpenOptions{DetectDotGit: true})
 	if err != nil {
 		return err
 	}
