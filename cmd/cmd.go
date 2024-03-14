@@ -17,6 +17,7 @@ func New() *cobra.Command {
 		Use:  "changelog-generator",
 		RunE: run,
 
+		ValidArgsFunction: cobra.NoFileCompletions,
 		DisableAutoGenTag: true,
 	}
 
