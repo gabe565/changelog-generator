@@ -14,6 +14,7 @@ func New(version, commit string) *cobra.Command {
 		RunE:    run,
 		Version: buildVersion(version, commit),
 
+		Args:              cobra.NoArgs,
 		ValidArgsFunction: cobra.NoFileCompletions,
 		DisableAutoGenTag: true,
 	}
