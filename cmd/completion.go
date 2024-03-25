@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"errors"
 	"fmt"
 
 	"github.com/spf13/cobra"
@@ -12,7 +13,7 @@ func registerCompletionFlag(cmd *cobra.Command) {
 	cmd.Flags().String(CompletionFlag, "", "Output command-line completion code for the specified shell. Can be 'bash', 'zsh', 'fish', or 'powershell'.")
 	err := cmd.RegisterFlagCompletionFunc(
 		CompletionFlag,
-		func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
+		func(_ *cobra.Command, _ []string, _ string) ([]string, cobra.ShellCompDirective) {
 			return []string{"bash", "zsh", "fish", "powershell"}, cobra.ShellCompDirectiveNoFileComp
 		},
 	)
@@ -21,7 +22,9 @@ func registerCompletionFlag(cmd *cobra.Command) {
 	}
 }
 
-func completion(cmd *cobra.Command, args []string) error {
+var ErrInvalidShell = errors.New("invalid shell")
+
+func completion(cmd *cobra.Command, _ []string) error {
 	completionFlag, err := cmd.Flags().GetString(CompletionFlag)
 	if err != nil {
 		panic(err)
@@ -45,7 +48,7 @@ func completion(cmd *cobra.Command, args []string) error {
 			return err
 		}
 	default:
-		return fmt.Errorf("%v: invalid shell", completionFlag)
+		return fmt.Errorf("%w: %s", ErrInvalidShell, completionFlag)
 	}
 	return nil
 }

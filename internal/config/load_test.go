@@ -8,6 +8,7 @@ import (
 
 	"github.com/spf13/cobra"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 type stubCmd struct {
@@ -51,12 +52,10 @@ func TestLoad(t *testing.T) {
 		defer cmd.close()
 
 		conf, err := Load(cmd.Command)
-		if !assert.NoError(t, err) {
-			return
-		}
+		require.NoError(t, err)
 		assert.Equal(t, Default, conf)
-		assert.Len(t, conf.Filters.Include, 0)
-		assert.Len(t, conf.Filters.Exclude, 0)
+		assert.Empty(t, conf.Filters.Include)
+		assert.Empty(t, conf.Filters.Exclude)
 		if assert.Len(t, conf.Groups, 1) {
 			assert.Nil(t, conf.Groups[0].re)
 		}
@@ -106,11 +105,9 @@ groups:
 			}
 
 			conf, err := Load(cmd.Command)
-			if !assert.NoError(t, err) {
-				return
-			}
+			require.NoError(t, err)
 			assert.Equal(t, Default, conf)
-			assert.Len(t, conf.Filters.Include, 0)
+			assert.Empty(t, conf.Filters.Include)
 			assert.Len(t, conf.Filters.Exclude, 2)
 			assert.Len(t, conf.Groups, 3)
 			for _, g := range conf.Groups {

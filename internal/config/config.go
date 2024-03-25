@@ -4,6 +4,7 @@ import (
 	"slices"
 )
 
+//nolint:gochecknoglobals
 var Default = NewDefault()
 
 type Config struct {

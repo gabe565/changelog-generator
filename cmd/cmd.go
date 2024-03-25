@@ -21,12 +21,12 @@ func New(version, commit string) *cobra.Command {
 	registerCompletionFlag(cmd)
 
 	cmd.Flags().String("config", "", `Config file (default ".changelog-generator.yaml")`)
-	_ = cmd.RegisterFlagCompletionFunc("config", func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
+	_ = cmd.RegisterFlagCompletionFunc("config", func(_ *cobra.Command, _ []string, _ string) ([]string, cobra.ShellCompDirective) {
 		return []string{"yaml"}, cobra.ShellCompDirectiveFilterFileExt
 	})
 
 	cmd.Flags().String("repo", ".", `Path to the git repo root. Parent directories will be walked until .git is found.`)
-	_ = cmd.RegisterFlagCompletionFunc("repo", func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
+	_ = cmd.RegisterFlagCompletionFunc("repo", func(_ *cobra.Command, _ []string, _ string) ([]string, cobra.ShellCompDirective) {
 		return []string{}, cobra.ShellCompDirectiveFilterDirs
 	})
 

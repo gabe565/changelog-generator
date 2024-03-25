@@ -6,6 +6,7 @@ import (
 	"github.com/gabe565/changelog-generator/cmd"
 )
 
+//nolint:gochecknoglobals
 var (
 	version = "beta"
 	commit  = ""
