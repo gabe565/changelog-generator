@@ -19,6 +19,7 @@ func NewDefault() *Config {
 	return &Config{
 		Sort:   SortAscending,
 		Abbrev: 8,
+		Groups: []*Group{{}},
 	}
 }
 

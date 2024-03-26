@@ -111,7 +111,11 @@ groups:
 			assert.Len(t, conf.Filters.Exclude, 2)
 			assert.Len(t, conf.Groups, 3)
 			for _, g := range conf.Groups {
-				assert.NotNil(t, g.re)
+				if g.Regexp == "" {
+					assert.Nil(t, g.re)
+				} else {
+					assert.NotNil(t, g.re)
+				}
 			}
 		})
 	}

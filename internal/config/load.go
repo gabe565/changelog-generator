@@ -76,11 +76,13 @@ func Load(cmd *cobra.Command) (*Config, error) {
 	}
 
 	for _, g := range Default.Groups {
-		re, err := regexp.Compile(g.Regexp)
-		if err != nil {
-			return nil, err
+		if g.Regexp != "" {
+			re, err := regexp.Compile(g.Regexp)
+			if err != nil {
+				return nil, err
+			}
+			g.re = re
 		}
-		g.re = re
 	}
 	if len(Default.Groups) == 0 {
 		Default.Groups = append(Default.Groups, &Group{})
