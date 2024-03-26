@@ -24,7 +24,10 @@ func FindRepo(cmd *cobra.Command) (*git.Repository, error) {
 	return repo, err
 }
 
-var ErrNoPreviousTag = errors.New("no previous tag found")
+var (
+	ErrNoCommits     = errors.New("no commits found")
+	ErrNoPreviousTag = errors.New("no previous tag found")
+)
 
 func FindRefs(repo *git.Repository) (*plumbing.Hash, error) {
 	tags, err := repo.Tags()
@@ -45,6 +48,9 @@ func FindRefs(repo *git.Repository) (*plumbing.Hash, error) {
 
 	head, err := repo.Reference(plumbing.HEAD, true)
 	if err != nil {
+		if errors.Is(err, plumbing.ErrReferenceNotFound) {
+			return nil, ErrNoCommits
+		}
 		return nil, err
 	}
 	if latest == nil || head.Hash() != latest.Hash() {
@@ -77,6 +83,9 @@ func FindRefs(repo *git.Repository) (*plumbing.Hash, error) {
 func WalkCommits(repo *git.Repository, conf *config.Config, previous *plumbing.Hash) error {
 	commits, err := repo.Log(&git.LogOptions{})
 	if err != nil {
+		if errors.Is(err, plumbing.ErrReferenceNotFound) {
+			return ErrNoCommits
+		}
 		return err
 	}
 	defer commits.Close()

@@ -57,11 +57,11 @@ func run(cmd *cobra.Command, args []string) error {
 	}
 
 	previous, err := git.FindRefs(repo)
-	if err != nil && !errors.Is(err, git.ErrNoPreviousTag) {
+	if err != nil && !errors.Is(err, git.ErrNoPreviousTag) && !errors.Is(err, git.ErrNoCommits) {
 		return err
 	}
 
-	if err := git.WalkCommits(repo, conf, previous); err != nil {
+	if err := git.WalkCommits(repo, conf, previous); err != nil && !errors.Is(err, git.ErrNoCommits) {
 		return err
 	}
 

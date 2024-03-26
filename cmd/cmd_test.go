@@ -89,6 +89,7 @@ func Test_run(t *testing.T) {
 		wantCommits      int
 		wantErr          require.ErrorAssertionFunc
 	}{
+		{"no commits", false, nil, 0, 0, require.NoError},
 		{"no tags", false, nil, 2, 2, require.NoError},
 		{"lightweight tag", true, nil, 2, 1, require.NoError},
 		{"annotated tag", true, &git.CreateTagOptions{Tagger: stubAuthor(), Message: "v1.0.0"}, 2, 1, require.NoError},
