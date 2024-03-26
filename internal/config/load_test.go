@@ -33,7 +33,7 @@ func TestLoad(t *testing.T) {
 	t.Parallel()
 	t.Run("no config file", func(t *testing.T) {
 		cmd := newStubCmd(t)
-		defer cmd.close()
+		t.Cleanup(cmd.close)
 
 		conf, err := Load(cmd.Command)
 		require.NoError(t, err)
@@ -58,7 +58,7 @@ func TestLoad(t *testing.T) {
 		t.Run("loads config at "+tt.path, func(t *testing.T) {
 			t.Parallel()
 			cmd := newStubCmd(t)
-			defer cmd.close()
+			t.Cleanup(cmd.close)
 
 			data := `filters:
   exclude:
