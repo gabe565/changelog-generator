@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"errors"
 	"io"
 
 	"github.com/gabe565/changelog-generator/internal/config"
@@ -56,7 +57,7 @@ func run(cmd *cobra.Command, args []string) error {
 	}
 
 	previous, err := git.FindRefs(repo)
-	if err != nil {
+	if err != nil && !errors.Is(err, git.ErrNoPreviousTag) {
 		return err
 	}
 

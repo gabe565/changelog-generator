@@ -24,7 +24,9 @@ func FindRepo(cmd *cobra.Command) (*git.Repository, error) {
 	return repo, err
 }
 
-func FindRefs(repo *git.Repository) (*plumbing.Reference, error) {
+var ErrNoPreviousTag = errors.New("no previous tag found")
+
+func FindRefs(repo *git.Repository) (*plumbing.Hash, error) {
 	tags, err := repo.Tags()
 	if err != nil {
 		return nil, err
@@ -50,10 +52,29 @@ func FindRefs(repo *git.Repository) (*plumbing.Reference, error) {
 		latest = head
 	}
 
-	return previous, nil
+	if previous == nil {
+		return nil, ErrNoPreviousTag
+	}
+
+	tag, err := repo.TagObject(previous.Hash())
+	switch {
+	case err == nil:
+		// Tag object present
+		commit, err := tag.Commit()
+		if err != nil {
+			return nil, err
+		}
+		return &commit.Hash, nil
+	case errors.Is(err, plumbing.ErrObjectNotFound):
+		// Not a tag object
+		hash := previous.Hash()
+		return &hash, nil
+	default:
+		return nil, err
+	}
 }
 
-func WalkCommits(repo *git.Repository, conf *config.Config, previous *plumbing.Reference) error {
+func WalkCommits(repo *git.Repository, conf *config.Config, previous *plumbing.Hash) error {
 	commits, err := repo.Log(&git.LogOptions{})
 	if err != nil {
 		return err
@@ -69,7 +90,7 @@ func WalkCommits(repo *git.Repository, conf *config.Config, previous *plumbing.R
 			return err
 		}
 
-		if previous != nil && ref.Hash == previous.Hash() {
+		if previous != nil && ref.Hash == *previous {
 			break
 		}
 
