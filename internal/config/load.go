@@ -34,11 +34,15 @@ func Load(cmd *cobra.Command) (*Config, error) {
 	if cfgFile != "" {
 		cfgFiles = append(cfgFiles, cfgFile)
 	} else {
+		repoPath, err := cmd.Flags().GetString("repo")
+		if err != nil {
+			return nil, err
+		}
 		cfgFiles = append(cfgFiles,
-			".changelog-generator.yaml",
-			".changelog-generator.yml",
-			".goreleaser.yaml",
-			".goreleaser.yml",
+			filepath.Join(repoPath, ".changelog-generator.yaml"),
+			filepath.Join(repoPath, ".changelog-generator.yml"),
+			filepath.Join(repoPath, ".goreleaser.yaml"),
+			filepath.Join(repoPath, ".goreleaser.yml"),
 		)
 	}
 

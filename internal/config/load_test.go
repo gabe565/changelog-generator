@@ -22,6 +22,7 @@ func newStubCmd(t *testing.T) *stubCmd {
 	require.NoError(t, err)
 	cmd := &stubCmd{Command: &cobra.Command{}, tempPath: temp}
 	cmd.Flags().String("config", "", "")
+	cmd.Flags().String("repo", ".", "")
 	return cmd
 }
 
