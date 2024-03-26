@@ -17,26 +17,22 @@ type stubCmd struct {
 	tempPath string
 }
 
-func newStubCmd() *stubCmd {
+func newStubCmd(t *testing.T) *stubCmd {
 	temp, err := os.MkdirTemp("", "changelog-generator-")
-	if err != nil {
-		panic(err)
-	}
+	require.NoError(t, err)
 	cmd := &stubCmd{Command: &cobra.Command{}, tempPath: temp}
 	cmd.Flags().String("config", "", "")
 	return cmd
 }
 
 func (s *stubCmd) close() {
-	if err := os.RemoveAll(s.tempPath); err != nil {
-		panic(err)
-	}
+	_ = os.RemoveAll(s.tempPath)
 }
 
 func TestLoad(t *testing.T) {
 	t.Parallel()
 	t.Run("no config file", func(t *testing.T) {
-		cmd := newStubCmd()
+		cmd := newStubCmd(t)
 		defer cmd.close()
 
 		conf, err := Load(cmd.Command)
@@ -61,7 +57,7 @@ func TestLoad(t *testing.T) {
 	for _, tt := range cfgFileTests {
 		t.Run("loads config at "+tt.path, func(t *testing.T) {
 			t.Parallel()
-			cmd := newStubCmd()
+			cmd := newStubCmd(t)
 			defer cmd.close()
 
 			data := `filters:

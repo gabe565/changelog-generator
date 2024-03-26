@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	"github.com/go-git/go-git/v5/plumbing/object"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestFilters_Match(t *testing.T) {
@@ -59,9 +60,7 @@ func TestFilters_Match(t *testing.T) {
 				Include:   tt.fields.Include,
 				includeRe: tt.fields.includeRe,
 			}
-			if got := f.Match(tt.args.c); got != tt.want {
-				t.Errorf("Match() = %v, want %v", got, tt.want)
-			}
+			assert.Equal(t, tt.want, f.Match(tt.args.c))
 		})
 	}
 }
