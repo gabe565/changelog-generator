@@ -53,7 +53,7 @@ func TestLoad(t *testing.T) {
 
 		conf, err := Load(cmd.Command)
 		require.NoError(t, err)
-		assert.Equal(t, Default, conf)
+		assert.EqualValues(t, NewDefault(), conf)
 		assert.Empty(t, conf.Filters.Include)
 		assert.Empty(t, conf.Filters.Exclude)
 		if assert.Len(t, conf.Groups, 1) {
@@ -72,9 +72,6 @@ func TestLoad(t *testing.T) {
 	}
 	for _, tt := range cfgFileTests {
 		t.Run("loads config at "+tt.path, func(t *testing.T) {
-			defer func() {
-				Default = NewDefault()
-			}()
 			cmd := newStubCmd()
 			defer cmd.close()
 
@@ -106,7 +103,6 @@ groups:
 
 			conf, err := Load(cmd.Command)
 			require.NoError(t, err)
-			assert.Equal(t, Default, conf)
 			assert.Empty(t, conf.Filters.Include)
 			assert.Len(t, conf.Filters.Exclude, 2)
 			assert.Len(t, conf.Groups, 3)

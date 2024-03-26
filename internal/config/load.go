@@ -22,9 +22,10 @@ type configFile struct {
 
 func Load(cmd *cobra.Command) (*Config, error) {
 	k := koanf.New(".")
+	conf := NewDefault()
 
 	// Load default config
-	if err := k.Load(structs.Provider(Default, "yaml"), nil); err != nil {
+	if err := k.Load(structs.Provider(conf, "yaml"), nil); err != nil {
 		return nil, err
 	}
 
@@ -71,11 +72,11 @@ func Load(cmd *cobra.Command) (*Config, error) {
 		break
 	}
 
-	if err := k.UnmarshalWithConf("", Default, koanf.UnmarshalConf{Tag: "yaml"}); err != nil {
+	if err := k.UnmarshalWithConf("", conf, koanf.UnmarshalConf{Tag: "yaml"}); err != nil {
 		return nil, err
 	}
 
-	for _, g := range Default.Groups {
+	for _, g := range conf.Groups {
 		if g.Regexp != "" {
 			re, err := regexp.Compile(g.Regexp)
 			if err != nil {
@@ -84,24 +85,24 @@ func Load(cmd *cobra.Command) (*Config, error) {
 			g.re = re
 		}
 	}
-	if len(Default.Groups) == 0 {
-		Default.Groups = append(Default.Groups, &Group{})
+	if len(conf.Groups) == 0 {
+		conf.Groups = append(conf.Groups, &Group{})
 	}
 
-	for _, exclude := range Default.Filters.Exclude {
+	for _, exclude := range conf.Filters.Exclude {
 		re, err := regexp.Compile(exclude)
 		if err != nil {
 			return nil, err
 		}
-		Default.Filters.excludeRe = append(Default.Filters.excludeRe, re)
+		conf.Filters.excludeRe = append(conf.Filters.excludeRe, re)
 	}
-	for _, exclude := range Default.Filters.Include {
+	for _, exclude := range conf.Filters.Include {
 		re, err := regexp.Compile(exclude)
 		if err != nil {
 			return nil, err
 		}
-		Default.Filters.includeRe = append(Default.Filters.includeRe, re)
+		conf.Filters.includeRe = append(conf.Filters.includeRe, re)
 	}
 
-	return Default, err
+	return conf, err
 }

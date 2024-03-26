@@ -4,9 +4,6 @@ import (
 	"slices"
 )
 
-//nolint:gochecknoglobals
-var Default = NewDefault()
-
 type Config struct {
 	Sort    string   `yaml:"sort"`
 	Abbrev  int      `yaml:"abbrev"`
@@ -31,8 +28,8 @@ func (c *Config) String() string {
 	})
 	var hasPrinted bool
 	for _, g := range c.Groups {
-		g.Sort()
-		if s := g.String(); s != "" {
+		g.Sort(c.Sort)
+		if s := g.String(c); s != "" {
 			if hasPrinted && c.Divider != "" {
 				result += c.Divider + "\n"
 			}

@@ -37,8 +37,8 @@ func (g *Group) AddCommit(c *object.Commit) {
 	g.Commits = append(g.Commits, c)
 }
 
-func (g *Group) Sort() {
-	switch Default.Sort {
+func (g *Group) Sort(sort string) {
+	switch sort {
 	case SortAscending:
 		slices.SortStableFunc(g.Commits, func(a, b *object.Commit) int {
 			return strings.Compare(a.Message, b.Message)
@@ -50,7 +50,7 @@ func (g *Group) Sort() {
 	}
 }
 
-func (g *Group) String() string {
+func (g *Group) String(conf *Config) string {
 	if len(g.Commits) == 0 {
 		return ""
 	}
@@ -62,8 +62,8 @@ func (g *Group) String() string {
 
 	for _, commit := range g.Commits {
 		entry := "- "
-		if Default.Abbrev != HashDisabled {
-			entry += commit.Hash.String()[:Default.Abbrev] + " "
+		if conf.Abbrev != HashDisabled {
+			entry += commit.Hash.String()[:conf.Abbrev] + " "
 		}
 		entry += util.ShortMessage(commit)
 		result += entry + "\n"

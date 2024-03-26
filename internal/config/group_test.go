@@ -68,10 +68,8 @@ func TestGroup_String(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			defer func(abbrev int) {
-				Default.Abbrev = abbrev
-			}(Default.Abbrev)
-			Default.Abbrev = tt.abbrev
+			c := NewDefault()
+			c.Abbrev = tt.abbrev
 
 			g := &Group{
 				Title:   tt.fields.Title,
@@ -80,7 +78,7 @@ func TestGroup_String(t *testing.T) {
 				re:      tt.fields.re,
 				Commits: tt.fields.Commits,
 			}
-			assert.Equal(t, tt.want, g.String())
+			assert.Equal(t, tt.want, g.String(c))
 		})
 	}
 }
