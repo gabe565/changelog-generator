@@ -5,6 +5,7 @@ package config
 import (
 	"errors"
 	"os"
+	"path/filepath"
 	"regexp"
 
 	"github.com/knadh/koanf/parsers/yaml"
@@ -14,11 +15,6 @@ import (
 	"github.com/knadh/koanf/v2"
 	"github.com/spf13/cobra"
 )
-
-type configFile struct {
-	path         string
-	isGoReleaser bool
-}
 
 func Load(cmd *cobra.Command) (*Config, error) {
 	k := koanf.New(".")
@@ -30,38 +26,38 @@ func Load(cmd *cobra.Command) (*Config, error) {
 	}
 
 	// Find config file
-	var cfgFiles []configFile
+	cfgFiles := make([]string, 0, 4)
 	cfgFile, err := cmd.Flags().GetString("config")
 	if err != nil {
 		return nil, err
 	}
 	if cfgFile != "" {
-		cfgFiles = append(cfgFiles, configFile{path: cfgFile})
+		cfgFiles = append(cfgFiles, cfgFile)
 	} else {
-		cfgFiles = []configFile{
-			{path: ".changelog-generator.yaml"},
-			{path: ".changelog-generator.yml"},
-			{path: ".goreleaser.yaml", isGoReleaser: true},
-			{path: ".goreleaser.yml", isGoReleaser: true},
-		}
+		cfgFiles = append(cfgFiles,
+			".changelog-generator.yaml",
+			".changelog-generator.yml",
+			".goreleaser.yaml",
+			".goreleaser.yml",
+		)
 	}
 
 	// Parse config file
 	parser := yaml.Parser()
 	for _, cfgFile := range cfgFiles {
 		subK := k
-		if cfgFile.isGoReleaser {
+		if isGoReleaser(cfgFile) {
 			subK = koanf.New(".")
 		}
 
-		if err := subK.Load(file.Provider(cfgFile.path), parser); err != nil {
+		if err := subK.Load(file.Provider(cfgFile), parser); err != nil {
 			if errors.Is(err, os.ErrNotExist) {
 				continue
 			}
 			return nil, err
 		}
 
-		if cfgFile.isGoReleaser {
+		if isGoReleaser(cfgFile) {
 			if changelogConf := subK.Get("changelog"); changelogConf != nil {
 				if err := k.Load(confmap.Provider(changelogConf.(map[string]any), "."), nil); err != nil {
 					return nil, err
@@ -105,4 +101,9 @@ func Load(cmd *cobra.Command) (*Config, error) {
 	}
 
 	return conf, err
+}
+
+func isGoReleaser(path string) bool {
+	base := filepath.Base(path)
+	return base == ".goreleaser.yaml" || base == ".goreleaser.yml"
 }
