@@ -10,6 +10,7 @@ import (
 )
 
 func TestGroup_Matches(t *testing.T) {
+	t.Parallel()
 	type fields struct {
 		Title   string
 		Order   int
@@ -33,6 +34,7 @@ func TestGroup_Matches(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
 			g := &Group{
 				Title:   tt.fields.Title,
 				Order:   tt.fields.Order,
@@ -46,6 +48,7 @@ func TestGroup_Matches(t *testing.T) {
 }
 
 func TestGroup_String(t *testing.T) {
+	t.Parallel()
 	testCommit := &object.Commit{Message: "test", Hash: plumbing.NewHash("DEADBEEF")}
 
 	type fields struct {
@@ -68,6 +71,7 @@ func TestGroup_String(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
 			c := NewDefault()
 			c.Abbrev = tt.abbrev
 

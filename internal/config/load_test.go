@@ -3,6 +3,7 @@ package config
 import (
 	"bufio"
 	"os"
+	"path/filepath"
 	"strings"
 	"testing"
 
@@ -13,7 +14,6 @@ import (
 
 type stubCmd struct {
 	*cobra.Command
-	prevWd   string
 	tempPath string
 }
 
@@ -22,31 +22,19 @@ func newStubCmd() *stubCmd {
 	if err != nil {
 		panic(err)
 	}
-	wd, err := os.Getwd()
-	if err != nil {
-		panic(err)
-	}
-	if err := os.Chdir(temp); err != nil {
-		panic(err)
-	}
-	cmd := &stubCmd{Command: &cobra.Command{}, prevWd: wd, tempPath: temp}
+	cmd := &stubCmd{Command: &cobra.Command{}, tempPath: temp}
 	cmd.Flags().String("config", "", "")
-	if err := cmd.ParseFlags(os.Args); err != nil {
-		panic(err)
-	}
 	return cmd
 }
 
 func (s *stubCmd) close() {
-	if err := os.Chdir(s.prevWd); err != nil {
-		panic(err)
-	}
 	if err := os.RemoveAll(s.tempPath); err != nil {
 		panic(err)
 	}
 }
 
 func TestLoad(t *testing.T) {
+	t.Parallel()
 	t.Run("no config file", func(t *testing.T) {
 		cmd := newStubCmd()
 		defer cmd.close()
@@ -72,6 +60,7 @@ func TestLoad(t *testing.T) {
 	}
 	for _, tt := range cfgFileTests {
 		t.Run("loads config at "+tt.path, func(t *testing.T) {
+			t.Parallel()
 			cmd := newStubCmd()
 			defer cmd.close()
 
@@ -95,11 +84,12 @@ groups:
 				for scanner.Scan() {
 					data += "  " + scanner.Text() + "\n"
 				}
+				require.NoError(t, scanner.Err())
 			}
 
-			if err := os.WriteFile(tt.path, []byte(data), 0o644); !assert.NoError(t, err) {
-				return
-			}
+			path := filepath.Join(cmd.tempPath, tt.path)
+			require.NoError(t, cmd.Flags().Set("config", path))
+			require.NoError(t, os.WriteFile(path, []byte(data), 0o666))
 
 			conf, err := Load(cmd.Command)
 			require.NoError(t, err)

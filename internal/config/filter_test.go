@@ -8,6 +8,7 @@ import (
 )
 
 func TestFilters_Match(t *testing.T) {
+	t.Parallel()
 	type fields struct {
 		Exclude   []string
 		excludeRe []*regexp.Regexp
@@ -51,6 +52,7 @@ func TestFilters_Match(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
 			f := &Filters{
 				Exclude:   tt.fields.Exclude,
 				excludeRe: tt.fields.excludeRe,

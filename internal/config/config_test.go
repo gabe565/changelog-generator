@@ -7,5 +7,6 @@ import (
 )
 
 func TestNewDefault(t *testing.T) {
+	t.Parallel()
 	assert.NotNil(t, NewDefault())
 }
