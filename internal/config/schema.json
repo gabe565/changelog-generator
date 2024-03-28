@@ -1,0 +1,65 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "sort": {
+      "type": "string",
+      "enum": ["asc", "desc"],
+      "default": "asc",
+      "description": "Sorts the changelog by the commit message.\nWhen empty, the order will match `git log`."
+    },
+    "abbrev": {
+      "type": "integer",
+      "default": 8,
+      "description": "Shortens the commit hashes.\nIf set to -1, commit hashes will be excluded."
+    },
+    "groups": {
+      "type": "array",
+      "description": "Groups commits into sections.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "title": {
+            "type": "string",
+            "description": "Group heading."
+          },
+          "order": {
+            "type": "integer",
+            "description": "Sort order of the group."
+          },
+          "regexp": {
+            "type": "string",
+            "description": "Regexp is matched against the first line of each commit."
+          }
+        }
+      }
+    },
+    "divider": {
+      "type": "string",
+      "description": "Divider that will be added between each group."
+    },
+    "filters": {
+      "type": "object",
+      "description": "Shows or hides commits. Each regexp is checked against the first commit message line only.",
+      "additionalProperties": false,
+      "properties": {
+        "exclude": {
+          "type": "array",
+          "description": "Regexp that will exclude matching commits from the changelog.",
+          "items": {
+            "type": "string"
+          }
+        },
+        "include": {
+          "type": "array",
+          "description": "Regexp that will include matching commits to the changelog. If set, exclude will be ignored.",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}
