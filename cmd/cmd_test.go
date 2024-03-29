@@ -81,23 +81,25 @@ func commitFile(t *testing.T, w *git.Worktree, cmd *stubCmd, name string) plumbi
 func Test_run(t *testing.T) {
 	t.Parallel()
 
+	type tag struct {
+		idx  []int
+		opts *git.CreateTagOptions
+	}
 	tests := []struct {
-		name             string
-		createTag        bool
-		createTagOptions *git.CreateTagOptions
-		commits          int
-		tagIdx           []int
-		wantCommits      int
-		wantErr          require.ErrorAssertionFunc
+		name        string
+		commits     int
+		tag         tag
+		wantCommits int
+		wantErr     require.ErrorAssertionFunc
 	}{
-		{"no commits", false, nil, 0, nil, 0, require.NoError},
-		{"no tags", false, nil, 2, nil, 2, require.NoError},
-		{"lightweight tag as latest", true, nil, 2, []int{1}, 2, require.NoError},
-		{"lightweight tag as previous", true, nil, 2, []int{0}, 1, require.NoError},
-		{"annotated tag as latest", true, &git.CreateTagOptions{Tagger: stubAuthor(), Message: "v1.0.0"}, 2, []int{1}, 2, require.NoError},
-		{"annotated tag as previous", true, &git.CreateTagOptions{Tagger: stubAuthor(), Message: "v1.0.0"}, 2, []int{0}, 1, require.NoError},
-		{"multiple tags with latest", true, nil, 3, []int{0, 2}, 2, require.NoError},
-		{"multiple tags as previous", true, nil, 3, []int{0, 1}, 1, require.NoError},
+		{"no commits", 0, tag{}, 0, require.NoError},
+		{"no tags", 2, tag{}, 2, require.NoError},
+		{"lightweight tag as latest", 2, tag{[]int{1}, nil}, 2, require.NoError},
+		{"lightweight tag as previous", 2, tag{[]int{0}, nil}, 1, require.NoError},
+		{"annotated tag as latest", 2, tag{[]int{1}, &git.CreateTagOptions{Tagger: stubAuthor(), Message: "v1.0.0"}}, 2, require.NoError},
+		{"annotated tag as previous", 2, tag{[]int{0}, &git.CreateTagOptions{Tagger: stubAuthor(), Message: "v1.0.0"}}, 1, require.NoError},
+		{"multiple tags with latest", 3, tag{[]int{0, 2}, nil}, 2, require.NoError},
+		{"multiple tags as previous", 3, tag{[]int{0, 1}, nil}, 1, require.NoError},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -114,12 +116,10 @@ func Test_run(t *testing.T) {
 			require.GreaterOrEqual(t, tt.commits, 0, "commits must be positive")
 			for i := range tt.commits {
 				commit := commitFile(t, w, cmd, "test"+strconv.Itoa(i))
-				if tt.createTag {
-					for _, tagIdx := range tt.tagIdx {
-						if i == tagIdx {
-							_, err = repo.CreateTag("v1.0."+strconv.Itoa(i), commit, tt.createTagOptions)
-							require.NoError(t, err)
-						}
+				for _, tagIdx := range tt.tag.idx {
+					if i == tagIdx {
+						_, err = repo.CreateTag("v1.0."+strconv.Itoa(i), commit, tt.tag.opts)
+						require.NoError(t, err)
 					}
 				}
 				commits = append(commits, commit)
