@@ -71,12 +71,6 @@ func FindRefs(repo *git.Repository) (*plumbing.Hash, error) {
 		return int(a.commit.Author.When.Sub(b.commit.Author.When))
 	})
 
-	switch len(tags) {
-	case 0:
-		return nil, ErrNoPreviousTag
-	case 1:
-		return tags[len(tags)-1].hash, nil
-	}
 	if len(tags) == 0 {
 		return nil, ErrNoPreviousTag
 	}
@@ -91,6 +85,9 @@ func FindRefs(repo *git.Repository) (*plumbing.Hash, error) {
 
 	if head.Hash() != *tags[len(tags)-1].hash {
 		return tags[len(tags)-1].hash, nil
+	}
+	if len(tags) == 1 {
+		return nil, ErrNoPreviousTag
 	}
 	return tags[len(tags)-2].hash, nil
 }

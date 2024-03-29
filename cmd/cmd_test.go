@@ -86,13 +86,16 @@ func Test_run(t *testing.T) {
 		createTag        bool
 		createTagOptions *git.CreateTagOptions
 		commits          int
+		tagIdx           int
 		wantCommits      int
 		wantErr          require.ErrorAssertionFunc
 	}{
-		{"no commits", false, nil, 0, 0, require.NoError},
-		{"no tags", false, nil, 2, 2, require.NoError},
-		{"lightweight tag", true, nil, 2, 1, require.NoError},
-		{"annotated tag", true, &git.CreateTagOptions{Tagger: stubAuthor(), Message: "v1.0.0"}, 2, 1, require.NoError},
+		{"no commits", false, nil, 0, 0, 0, require.NoError},
+		{"no tags", false, nil, 2, 0, 2, require.NoError},
+		{"lightweight tag as latest", true, nil, 2, 1, 2, require.NoError},
+		{"lightweight tag as previous", true, nil, 2, 0, 1, require.NoError},
+		{"annotated tag as latest", true, &git.CreateTagOptions{Tagger: stubAuthor(), Message: "v1.0.0"}, 2, 1, 2, require.NoError},
+		{"annotated tag as previous", true, &git.CreateTagOptions{Tagger: stubAuthor(), Message: "v1.0.0"}, 2, 0, 1, require.NoError},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -108,18 +111,19 @@ func Test_run(t *testing.T) {
 			var commits []plumbing.Hash
 			require.GreaterOrEqual(t, tt.commits, 0, "commits must be positive")
 			for i := range tt.commits {
-				commits = append(commits, commitFile(t, w, cmd, "test"+strconv.Itoa(i)))
-			}
-
-			if tt.createTag {
-				_, err = repo.CreateTag("v1.0.0", commits[0], tt.createTagOptions)
-				require.NoError(t, err)
+				commit := commitFile(t, w, cmd, "test"+strconv.Itoa(i))
+				if tt.createTag && i == tt.tagIdx {
+					_, err = repo.CreateTag("v1.0.0", commit, tt.createTagOptions)
+					require.NoError(t, err)
+				}
+				commits = append(commits, commit)
 			}
 
 			var buf strings.Builder
 			cmd.SetOut(&buf)
 
 			tt.wantErr(t, cmd.Execute())
+			assert.Equal(t, tt.wantCommits+1, strings.Count(buf.String(), "\n"), "line count mismatch")
 
 			want := "## Changelog\n"
 			require.GreaterOrEqual(t, tt.wantCommits, 0, "wantCommits must be positive")
