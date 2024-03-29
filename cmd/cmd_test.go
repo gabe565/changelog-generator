@@ -86,16 +86,18 @@ func Test_run(t *testing.T) {
 		createTag        bool
 		createTagOptions *git.CreateTagOptions
 		commits          int
-		tagIdx           int
+		tagIdx           []int
 		wantCommits      int
 		wantErr          require.ErrorAssertionFunc
 	}{
-		{"no commits", false, nil, 0, 0, 0, require.NoError},
-		{"no tags", false, nil, 2, 0, 2, require.NoError},
-		{"lightweight tag as latest", true, nil, 2, 1, 2, require.NoError},
-		{"lightweight tag as previous", true, nil, 2, 0, 1, require.NoError},
-		{"annotated tag as latest", true, &git.CreateTagOptions{Tagger: stubAuthor(), Message: "v1.0.0"}, 2, 1, 2, require.NoError},
-		{"annotated tag as previous", true, &git.CreateTagOptions{Tagger: stubAuthor(), Message: "v1.0.0"}, 2, 0, 1, require.NoError},
+		{"no commits", false, nil, 0, nil, 0, require.NoError},
+		{"no tags", false, nil, 2, nil, 2, require.NoError},
+		{"lightweight tag as latest", true, nil, 2, []int{1}, 2, require.NoError},
+		{"lightweight tag as previous", true, nil, 2, []int{0}, 1, require.NoError},
+		{"annotated tag as latest", true, &git.CreateTagOptions{Tagger: stubAuthor(), Message: "v1.0.0"}, 2, []int{1}, 2, require.NoError},
+		{"annotated tag as previous", true, &git.CreateTagOptions{Tagger: stubAuthor(), Message: "v1.0.0"}, 2, []int{0}, 1, require.NoError},
+		{"multiple tags with latest", true, nil, 3, []int{0, 2}, 2, require.NoError},
+		{"multiple tags as previous", true, nil, 3, []int{0, 1}, 1, require.NoError},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -112,9 +114,13 @@ func Test_run(t *testing.T) {
 			require.GreaterOrEqual(t, tt.commits, 0, "commits must be positive")
 			for i := range tt.commits {
 				commit := commitFile(t, w, cmd, "test"+strconv.Itoa(i))
-				if tt.createTag && i == tt.tagIdx {
-					_, err = repo.CreateTag("v1.0.0", commit, tt.createTagOptions)
-					require.NoError(t, err)
+				if tt.createTag {
+					for _, tagIdx := range tt.tagIdx {
+						if i == tagIdx {
+							_, err = repo.CreateTag("v1.0."+strconv.Itoa(i), commit, tt.createTagOptions)
+							require.NoError(t, err)
+						}
+					}
 				}
 				commits = append(commits, commit)
 			}
