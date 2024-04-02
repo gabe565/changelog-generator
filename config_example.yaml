@@ -1,4 +1,4 @@
-# yaml-language-server: $schema=https://raw.githubusercontent.com/gabe565/changelog-generator/main/internal/config/config.schema.json
+# yaml-language-server: $schema=https://gabe565.github.io/changelog-generator/config.schema.json
 
 # Sorts the changelog by the commit message.
 # When empty, the order will match `git log`.

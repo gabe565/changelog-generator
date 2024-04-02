@@ -1,0 +1,25 @@
+name: Publish Schema
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+
+jobs:
+  publish-schema:
+    name: Publish Schema
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - run: |
+          mkdir _site
+          cp -a internal/config/*.schema.json _site/
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+      - name: Deploy to GitHub Pages
+        uses: actions/deploy-pages@v4
