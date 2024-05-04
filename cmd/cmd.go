@@ -53,8 +53,8 @@ func run(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	_, _ = io.WriteString(cmd.OutOrStdout(), conf.String())
-	return nil
+	_, err = io.WriteString(cmd.OutOrStdout(), conf.String())
+	return err
 }
 
 func buildVersion(version, commit string) string {
