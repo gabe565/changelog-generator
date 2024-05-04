@@ -18,23 +18,14 @@ func completion(cmd *cobra.Command, _ []string) error {
 
 	switch completionFlag {
 	case "bash":
-		if err := cmd.Root().GenBashCompletion(cmd.OutOrStdout()); err != nil {
-			return err
-		}
+		return cmd.Root().GenBashCompletion(cmd.OutOrStdout())
 	case "zsh":
-		if err := cmd.Root().GenZshCompletion(cmd.OutOrStdout()); err != nil {
-			return err
-		}
+		return cmd.Root().GenZshCompletion(cmd.OutOrStdout())
 	case "fish":
-		if err := cmd.Root().GenFishCompletion(cmd.OutOrStdout(), true); err != nil {
-			return err
-		}
+		return cmd.Root().GenFishCompletion(cmd.OutOrStdout(), true)
 	case "powershell":
-		if err := cmd.Root().GenPowerShellCompletionWithDesc(cmd.OutOrStdout()); err != nil {
-			return err
-		}
+		return cmd.Root().GenPowerShellCompletionWithDesc(cmd.OutOrStdout())
 	default:
 		return fmt.Errorf("%w: %s", ErrInvalidShell, completionFlag)
 	}
-	return nil
 }
