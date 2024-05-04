@@ -8,6 +8,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/gabe565/changelog-generator/internal/config"
 	"github.com/go-git/go-git/v5"
 	"github.com/go-git/go-git/v5/plumbing"
 	"github.com/go-git/go-git/v5/plumbing/object"
@@ -48,7 +49,7 @@ func newStubCmd(t *testing.T) *stubCmd {
 	temp, err := os.MkdirTemp("", "changelog-generator-")
 	require.NoError(t, err)
 	cmd := &stubCmd{Command: New("", ""), tempPath: temp}
-	require.NoError(t, cmd.Flags().Set("repo", cmd.tempPath))
+	require.NoError(t, cmd.Flags().Set(config.RepoFlag, cmd.tempPath))
 	cmd.SetArgs([]string{})
 	return cmd
 }

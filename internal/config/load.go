@@ -27,14 +27,14 @@ func Load(cmd *cobra.Command) (*Config, error) {
 
 	// Find config file
 	cfgFiles := make([]string, 0, 4)
-	cfgFile, err := cmd.Flags().GetString("config")
+	cfgFile, err := cmd.Flags().GetString(ConfigFlag)
 	if err != nil {
 		return nil, err
 	}
 	if cfgFile != "" {
 		cfgFiles = append(cfgFiles, cfgFile)
 	} else {
-		repoPath, err := cmd.Flags().GetString("repo")
+		repoPath, err := cmd.Flags().GetString(RepoFlag)
 		if err != nil {
 			return nil, err
 		}

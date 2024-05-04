@@ -4,28 +4,14 @@ import (
 	"errors"
 	"fmt"
 
+	"github.com/gabe565/changelog-generator/internal/config"
 	"github.com/spf13/cobra"
 )
-
-const CompletionFlag = "completion"
-
-func registerCompletionFlag(cmd *cobra.Command) {
-	cmd.Flags().String(CompletionFlag, "", "Output command-line completion code for the specified shell. Can be 'bash', 'zsh', 'fish', or 'powershell'.")
-	err := cmd.RegisterFlagCompletionFunc(
-		CompletionFlag,
-		func(_ *cobra.Command, _ []string, _ string) ([]string, cobra.ShellCompDirective) {
-			return []string{"bash", "zsh", "fish", "powershell"}, cobra.ShellCompDirectiveNoFileComp
-		},
-	)
-	if err != nil {
-		panic(err)
-	}
-}
 
 var ErrInvalidShell = errors.New("invalid shell")
 
 func completion(cmd *cobra.Command, _ []string) error {
-	completionFlag, err := cmd.Flags().GetString(CompletionFlag)
+	completionFlag, err := cmd.Flags().GetString(config.CompletionFlag)
 	if err != nil {
 		panic(err)
 	}

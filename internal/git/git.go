@@ -13,7 +13,7 @@ import (
 )
 
 func FindRepo(cmd *cobra.Command) (*git.Repository, error) {
-	repoPath, err := cmd.Flags().GetString("repo")
+	repoPath, err := cmd.Flags().GetString(config.RepoFlag)
 	if err != nil {
 		return nil, err
 	}

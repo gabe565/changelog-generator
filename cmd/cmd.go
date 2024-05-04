@@ -19,24 +19,12 @@ func New(version, commit string) *cobra.Command {
 		ValidArgsFunction: cobra.NoFileCompletions,
 		DisableAutoGenTag: true,
 	}
-
-	registerCompletionFlag(cmd)
-
-	cmd.Flags().String("config", "", `Config file (default ".changelog-generator.yaml")`)
-	_ = cmd.RegisterFlagCompletionFunc("config", func(_ *cobra.Command, _ []string, _ string) ([]string, cobra.ShellCompDirective) {
-		return []string{"yaml"}, cobra.ShellCompDirectiveFilterFileExt
-	})
-
-	cmd.Flags().String("repo", ".", `Path to the git repo root. Parent directories will be walked until .git is found.`)
-	_ = cmd.RegisterFlagCompletionFunc("repo", func(_ *cobra.Command, _ []string, _ string) ([]string, cobra.ShellCompDirective) {
-		return []string{}, cobra.ShellCompDirectiveFilterDirs
-	})
-
+	config.RegisterFlags(cmd)
 	return cmd
 }
 
 func run(cmd *cobra.Command, args []string) error {
-	completionFlag, err := cmd.Flags().GetString(CompletionFlag)
+	completionFlag, err := cmd.Flags().GetString(config.CompletionFlag)
 	if err != nil {
 		return err
 	}
