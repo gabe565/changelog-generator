@@ -1,4 +1,7 @@
 project_name: changelog-generator
+before:
+  hooks:
+    - go run ./internal/generate/completions --date={{ .CommitDate }}
 builds:
   - env:
       - CGO_ENABLED=0
