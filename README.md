@@ -57,7 +57,9 @@ jobs:
 ```
 
 ## Configuration
+Changelog Generator can be configured by committing a file to one of the paths listed below. See the [config example](config_example.yaml) for available configuration documentation.
 
-Configuration is loaded from `.changelog-generator.yaml` in the git repo root. See the [config example](config_example.yaml) for more details.
-
-If `.changelog-generator.yaml` is not found, Changelog Generator will attempt to load the `changelog` key from `.goreleaser.yaml`.
+#### Default Paths
+- `.changelog-generator.yaml`
+- `.github/changelog-generator.yaml`
+- `.goreleaser.yaml`.

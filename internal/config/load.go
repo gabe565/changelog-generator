@@ -41,6 +41,8 @@ func Load(cmd *cobra.Command) (*Config, error) {
 		cfgFiles = append(cfgFiles,
 			filepath.Join(repoPath, ".changelog-generator.yaml"),
 			filepath.Join(repoPath, ".changelog-generator.yml"),
+			filepath.Join(repoPath, ".github", "changelog-generator.yaml"),
+			filepath.Join(repoPath, ".github", "changelog-generator.yml"),
 			filepath.Join(repoPath, ".goreleaser.yaml"),
 			filepath.Join(repoPath, ".goreleaser.yml"),
 		)
