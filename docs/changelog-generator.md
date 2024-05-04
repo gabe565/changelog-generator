@@ -1,6 +1,6 @@
 ## changelog-generator
 
-
+Generates a changelog from commits since the previous release
 
 ```
 changelog-generator [flags]

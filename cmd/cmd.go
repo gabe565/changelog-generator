@@ -12,6 +12,7 @@ import (
 func New(version, commit string) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "changelog-generator",
+		Short:   "Generates a changelog from commits since the previous release",
 		RunE:    run,
 		Version: buildVersion(version, commit),
 
