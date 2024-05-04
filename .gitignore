@@ -1,4 +1,5 @@
 .idea/
-changelog-generator
 /completions/
+/dist/
 /manpages/
+changelog-generator

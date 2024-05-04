@@ -63,3 +63,85 @@ Changelog Generator can be configured by committing a file to one of the paths l
 - `.changelog-generator.yaml`
 - `.github/changelog-generator.yaml`
 - `.goreleaser.yaml`.
+
+## Installation
+
+Changelog Generator can also be installed for local generation and previews.
+
+### APT (Ubuntu, Debian)
+
+<details>
+  <summary>Click to expand</summary>
+
+1. If you don't have it already, install the `ca-certificates` package
+   ```shell
+   sudo apt install ca-certificates
+   ```
+
+2. Add gabe565 apt repository
+   ```
+   echo 'deb [trusted=yes] https://apt.gabe565.com /' | sudo tee /etc/apt/sources.list.d/gabe565.list
+   ```
+
+3. Update apt repositories
+   ```shell
+   sudo apt update
+   ```
+
+4. Install changelog-generator
+   ```shell
+   sudo apt install changelog-generator
+   ```
+</details>
+
+### RPM (CentOS, RHEL)
+
+<details>
+  <summary>Click to expand</summary>
+
+1. If you don't have it already, install the `ca-certificates` package
+   ```shell
+   sudo dnf install ca-certificates
+   ```
+
+2. Add gabe565 rpm repository to `/etc/yum.repos.d/gabe565.repo`
+   ```ini
+   [gabe565]
+   name=gabe565
+   baseurl=https://rpm.gabe565.com
+   enabled=1
+   gpgcheck=0
+   ```
+
+3. Install changelog-generator
+   ```shell
+   sudo dnf install changelog-generator
+   ```
+</details>
+
+### AUR (Arch Linux)
+
+<details>
+  <summary>Click to expand</summary>
+
+Install [changelog-generator-bin](https://aur.archlinux.org/packages/changelog-generator-bin) with your [AUR helper](https://wiki.archlinux.org/index.php/AUR_helpers) of choice.
+</details>
+
+### Homebrew (macOS, Linux)
+
+<details>
+  <summary>Click to expand</summary>
+
+Install changelog-generator from [gabe565/homebrew-tap](https://github.com/gabe565/homebrew-tap):
+```shell
+brew install gabe565/tap/changelog-generator
+```
+</details>
+
+### Manual Installation
+
+<details>
+  <summary>Click to expand</summary>
+
+Download and run the [latest release binary](https://github.com/gabe565/changelog-generator/releases/latest) for your system and architecture.
+</details>
