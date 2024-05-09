@@ -18,11 +18,14 @@ abbrev: 8
 # - order determines the sort order of the group.
 # - regexp is matched against the first line of each commit.
 groups:
-  - title: Features
+  - title: Breaking Changes
     order: 0
+    regexp: "^.+?!:"
+  - title: Features
+    order: 1
     regexp: "^(feat)"
   - title: Fixes
-    order: 1
+    order: 2
     regexp: "^(fix|perf)"
   - title: Others
     order: 999
