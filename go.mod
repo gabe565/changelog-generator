@@ -1,6 +1,6 @@
 module github.com/gabe565/changelog-generator
 
-go 1.22.2
+go 1.22.4
 
 require (
 	github.com/go-git/go-git/v5 v5.12.0
