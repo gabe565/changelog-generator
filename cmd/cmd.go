@@ -45,7 +45,7 @@ func run(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	previous, err := git.FindRefs(repo, conf)
+	previous, err := git.FindPreviousTag(repo, conf)
 	if err != nil && !errors.Is(err, git.ErrNoPreviousTag) && !errors.Is(err, git.ErrNoCommits) {
 		return err
 	}

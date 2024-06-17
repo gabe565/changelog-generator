@@ -31,7 +31,7 @@ var (
 	ErrNoPreviousTag = errors.New("no previous tag found")
 )
 
-func FindRefs(repo *git.Repository, conf *config.Config) (*plumbing.Hash, error) {
+func FindPreviousTag(repo *git.Repository, conf *config.Config) (*plumbing.Hash, error) {
 	tagIter, err := repo.Tags()
 	if err != nil {
 		return nil, err
