@@ -1,5 +1,10 @@
 # yaml-language-server: $schema=https://gabe565.github.io/changelog-generator/config.schema.json
 
+# Configures tag matching behavior.
+tag:
+  # Optional anchored regexp used to filter tags.
+  regexp: 'v\d+\.\d+\.\d+'
+
 # Sorts the changelog by the commit message.
 # When empty, the order will match `git log`.
 #

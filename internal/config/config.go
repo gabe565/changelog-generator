@@ -5,6 +5,7 @@ import (
 )
 
 type Config struct {
+	Tag     Tag      `yaml:"tag"`
 	Sort    string   `yaml:"sort"`
 	Abbrev  int      `yaml:"abbrev"`
 	Groups  []*Group `yaml:"groups"`

@@ -3,6 +3,17 @@
   "type": "object",
   "additionalProperties": false,
   "properties": {
+    "tag": {
+      "type": "object",
+      "description": "Configures tag matching behavior.",
+      "additionalProperties": false,
+      "properties": {
+        "regexp": {
+          "type": "string",
+          "description": "Anchored regexp used to filter tags."
+        }
+      }
+    },
     "sort": {
       "type": "string",
       "enum": ["asc", "desc"],

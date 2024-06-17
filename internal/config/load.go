@@ -106,6 +106,13 @@ func Load(cmd *cobra.Command) (*Config, error) {
 		conf.Filters.includeRe = append(conf.Filters.includeRe, re)
 	}
 
+	if conf.Tag.Regexp != "" {
+		conf.Tag.Regexp = "^" + conf.Tag.Regexp + "$"
+		if conf.Tag.re, err = regexp.Compile(conf.Tag.Regexp); err != nil {
+			return nil, err
+		}
+	}
+
 	return conf, err
 }
 
