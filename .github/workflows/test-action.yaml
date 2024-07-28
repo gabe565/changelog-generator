@@ -23,4 +23,4 @@ jobs:
         run: command -v changelog-generator
       - name: Binary runs
         shell: bash
-        run: changelog-generator --help
+        run: changelog-generator --version
