@@ -2,7 +2,6 @@ package git
 
 import (
 	"errors"
-	"io"
 	"slices"
 
 	"gabe565.com/changelog-generator/internal/config"
@@ -29,25 +28,15 @@ var (
 )
 
 func FindPreviousTag(repo *git.Repository, conf *config.Config) (*plumbing.Hash, error) {
-	tagIter, err := repo.Tags()
-	if err != nil {
-		return nil, err
-	}
-	defer tagIter.Close()
-
 	type refCommit struct {
 		ref    *plumbing.Reference
 		commit *object.Commit
 		hash   *plumbing.Hash
 	}
 
-	var tags []refCommit
-	for {
-		ref, err := tagIter.Next()
+	var tags []refCommit //nolint:prealloc
+	for ref, err := range TagIter(repo) {
 		if err != nil {
-			if errors.Is(err, io.EOF) {
-				break
-			}
 			return nil, err
 		}
 
@@ -94,21 +83,8 @@ func FindPreviousTag(repo *git.Repository, conf *config.Config) (*plumbing.Hash,
 }
 
 func WalkCommits(repo *git.Repository, conf *config.Config, previous *plumbing.Hash) error {
-	commits, err := repo.Log(&git.LogOptions{})
-	if err != nil {
-		if errors.Is(err, plumbing.ErrReferenceNotFound) {
-			return ErrNoCommits
-		}
-		return err
-	}
-	defer commits.Close()
-
-	for {
-		ref, err := commits.Next()
+	for ref, err := range CommitIter(repo, &git.LogOptions{}) {
 		if err != nil {
-			if errors.Is(err, io.EOF) {
-				break
-			}
 			return err
 		}
 
