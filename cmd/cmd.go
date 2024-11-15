@@ -6,21 +6,24 @@ import (
 
 	"gabe565.com/changelog-generator/internal/config"
 	"gabe565.com/changelog-generator/internal/git"
+	"gabe565.com/utils/cobrax"
 	"github.com/spf13/cobra"
 )
 
-func New(version, commit string) *cobra.Command {
+func New(opts ...cobrax.Option) *cobra.Command {
 	cmd := &cobra.Command{
-		Use:     "changelog-generator",
-		Short:   "Generates a changelog from commits since the previous release",
-		RunE:    run,
-		Version: buildVersion(version, commit),
+		Use:   "changelog-generator",
+		Short: "Generates a changelog from commits since the previous release",
+		RunE:  run,
 
 		Args:              cobra.NoArgs,
 		ValidArgsFunction: cobra.NoFileCompletions,
 		DisableAutoGenTag: true,
 	}
 	config.RegisterFlags(cmd)
+	for _, opt := range opts {
+		opt(cmd)
+	}
 	return cmd
 }
 

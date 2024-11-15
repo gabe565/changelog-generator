@@ -3,6 +3,7 @@ module gabe565.com/changelog-generator
 go 1.23.3
 
 require (
+	gabe565.com/utils v0.0.0-20241114234101-e128cd3269b5
 	github.com/go-git/go-git/v5 v5.12.0
 	github.com/knadh/koanf/parsers/yaml v0.1.0
 	github.com/knadh/koanf/providers/confmap v0.1.0
@@ -44,7 +45,7 @@ require (
 	golang.org/x/crypto v0.21.0 // indirect
 	golang.org/x/mod v0.16.0 // indirect
 	golang.org/x/net v0.23.0 // indirect
-	golang.org/x/sys v0.21.0 // indirect
+	golang.org/x/sys v0.26.0 // indirect
 	golang.org/x/tools v0.19.0 // indirect
 	gopkg.in/warnings.v0 v0.1.2 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect

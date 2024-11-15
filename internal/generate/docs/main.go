@@ -6,6 +6,7 @@ import (
 	"os"
 
 	"gabe565.com/changelog-generator/cmd"
+	"gabe565.com/utils/cobrax"
 	"github.com/spf13/cobra/doc"
 )
 
@@ -23,7 +24,7 @@ func main() {
 		log.Fatal(fmt.Errorf("failed to mkdir: %w", err))
 	}
 
-	rootCmd := cmd.New("", "")
+	rootCmd := cmd.New(cobrax.WithVersion("beta"))
 
 	err = doc.GenMarkdownTree(rootCmd, output)
 	if err != nil {

@@ -4,16 +4,14 @@ import (
 	"os"
 
 	"gabe565.com/changelog-generator/cmd"
+	"gabe565.com/utils/cobrax"
 )
 
-//nolint:gochecknoglobals
-var (
-	version = "beta"
-	commit  = ""
-)
+var version = "beta"
 
 func main() {
-	if err := cmd.New(version, commit).Execute(); err != nil {
+	root := cmd.New(cobrax.WithVersion(version))
+	if err := root.Execute(); err != nil {
 		os.Exit(1)
 	}
 }

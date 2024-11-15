@@ -48,7 +48,7 @@ type stubCmd struct {
 func newStubCmd(t *testing.T) *stubCmd {
 	temp, err := os.MkdirTemp("", "changelog-generator-")
 	require.NoError(t, err)
-	cmd := &stubCmd{Command: New("", ""), tempPath: temp}
+	cmd := &stubCmd{Command: New(), tempPath: temp}
 	require.NoError(t, cmd.Flags().Set(config.RepoFlag, cmd.tempPath))
 	cmd.SetArgs([]string{})
 	return cmd
