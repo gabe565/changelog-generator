@@ -6,6 +6,7 @@ import (
 	"slices"
 
 	"gabe565.com/changelog-generator/internal/config"
+	"gabe565.com/utils/must"
 	"github.com/go-git/go-git/v5"
 	"github.com/go-git/go-git/v5/plumbing"
 	"github.com/go-git/go-git/v5/plumbing/object"
@@ -13,11 +14,7 @@ import (
 )
 
 func FindRepo(cmd *cobra.Command) (*git.Repository, error) {
-	repoPath, err := cmd.Flags().GetString(config.RepoFlag)
-	if err != nil {
-		return nil, err
-	}
-
+	repoPath := must.Must2(cmd.Flags().GetString(config.RepoFlag))
 	repo, err := git.PlainOpenWithOptions(repoPath, &git.PlainOpenOptions{DetectDotGit: true})
 	if err != nil {
 		return nil, err

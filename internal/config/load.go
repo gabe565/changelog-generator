@@ -8,6 +8,7 @@ import (
 	"path/filepath"
 	"regexp"
 
+	"gabe565.com/utils/must"
 	"github.com/knadh/koanf/parsers/yaml"
 	"github.com/knadh/koanf/providers/confmap"
 	"github.com/knadh/koanf/providers/file"
@@ -27,17 +28,11 @@ func Load(cmd *cobra.Command) (*Config, error) {
 
 	// Find config file
 	cfgFiles := make([]string, 0, 4)
-	cfgFile, err := cmd.Flags().GetString(ConfigFlag)
-	if err != nil {
-		return nil, err
-	}
+	cfgFile := must.Must2(cmd.Flags().GetString(ConfigFlag))
 	if cfgFile != "" {
 		cfgFiles = append(cfgFiles, cfgFile)
 	} else {
-		repoPath, err := cmd.Flags().GetString(RepoFlag)
-		if err != nil {
-			return nil, err
-		}
+		repoPath := must.Must2(cmd.Flags().GetString(RepoFlag))
 		cfgFiles = append(cfgFiles,
 			filepath.Join(repoPath, ".changelog-generator.yaml"),
 			filepath.Join(repoPath, ".changelog-generator.yml"),
@@ -108,12 +103,13 @@ func Load(cmd *cobra.Command) (*Config, error) {
 
 	if conf.Tag.Regexp != "" {
 		conf.Tag.Regexp = "^" + conf.Tag.Regexp + "$"
+		var err error
 		if conf.Tag.re, err = regexp.Compile(conf.Tag.Regexp); err != nil {
 			return nil, err
 		}
 	}
 
-	return conf, err
+	return conf, nil
 }
 
 func isGoReleaser(path string) bool {
