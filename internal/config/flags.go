@@ -22,7 +22,7 @@ func RegisterFlags(cmd *cobra.Command) {
 		return []string{}, cobra.ShellCompDirectiveFilterDirs
 	}))
 
-	cmd.Flags().String(CompletionFlag, "", "Output command-line completion code for the specified shell. Can be 'bash', 'zsh', 'fish', or 'powershell'.")
+	cmd.Flags().String(CompletionFlag, "", "Output command-line completion code for the specified shell. (one of bash, zsh, fish, powershell)")
 	must.Must(cmd.RegisterFlagCompletionFunc(CompletionFlag, func(_ *cobra.Command, _ []string, _ string) ([]string, cobra.ShellCompDirective) {
 		return []string{"bash", "zsh", "fish", "powershell"}, cobra.ShellCompDirectiveNoFileComp
 	}))
