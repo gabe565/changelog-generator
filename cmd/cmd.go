@@ -29,7 +29,7 @@ func New(opts ...cobrax.Option) *cobra.Command {
 }
 
 func run(cmd *cobra.Command, _ []string) error {
-	if shell := must.Must2(cmd.Flags().GetString(config.CompletionFlag)); shell != "" {
+	if shell := must.Must2(cmd.Flags().GetString(config.FlagCompletion)); shell != "" {
 		return completion(cmd, shell)
 	}
 

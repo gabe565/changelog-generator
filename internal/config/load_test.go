@@ -21,8 +21,8 @@ func newStubCmd(t *testing.T) *stubCmd {
 	temp, err := os.MkdirTemp("", "changelog-generator-")
 	require.NoError(t, err)
 	cmd := &stubCmd{Command: &cobra.Command{}, tempPath: temp}
-	cmd.Flags().String(ConfigFlag, "", "")
-	cmd.Flags().String(RepoFlag, ".", "")
+	cmd.Flags().String(FlagConfig, "", "")
+	cmd.Flags().String(FlagRepo, ".", "")
 	return cmd
 }
 
@@ -85,7 +85,7 @@ groups:
 			}
 
 			path := filepath.Join(cmd.tempPath, tt.path)
-			require.NoError(t, cmd.Flags().Set(ConfigFlag, path))
+			require.NoError(t, cmd.Flags().Set(FlagConfig, path))
 			require.NoError(t, os.WriteFile(path, []byte(data), 0o666))
 
 			conf, err := Load(cmd.Command)

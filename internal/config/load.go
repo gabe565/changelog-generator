@@ -28,11 +28,11 @@ func Load(cmd *cobra.Command) (*Config, error) {
 
 	// Find config file
 	cfgFiles := make([]string, 0, 4)
-	cfgFile := must.Must2(cmd.Flags().GetString(ConfigFlag))
+	cfgFile := must.Must2(cmd.Flags().GetString(FlagConfig))
 	if cfgFile != "" {
 		cfgFiles = append(cfgFiles, cfgFile)
 	} else {
-		repoPath := must.Must2(cmd.Flags().GetString(RepoFlag))
+		repoPath := must.Must2(cmd.Flags().GetString(FlagRepo))
 		cfgFiles = append(cfgFiles,
 			filepath.Join(repoPath, ".changelog-generator.yaml"),
 			filepath.Join(repoPath, ".changelog-generator.yml"),
