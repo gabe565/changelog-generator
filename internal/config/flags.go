@@ -17,7 +17,7 @@ func RegisterFlags(cmd *cobra.Command) {
 		return []string{"yaml"}, cobra.ShellCompDirectiveFilterFileExt
 	}))
 
-	cmd.Flags().String(FlagRepo, ".", `Path to the git repo root. Parent directories will be walked until .git is found.`)
+	cmd.Flags().StringP(FlagRepo, "C", ".", `Path to the git repo root. Parent directories will be walked until .git is found.`)
 	must.Must(cmd.RegisterFlagCompletionFunc(FlagRepo, func(_ *cobra.Command, _ []string, _ string) ([]string, cobra.ShellCompDirective) {
 		return []string{}, cobra.ShellCompDirectiveFilterDirs
 	}))
