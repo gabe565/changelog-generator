@@ -5,7 +5,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/gabe565/changelog-generator/cmd"
+	"gabe565.com/changelog-generator/cmd"
 	"github.com/spf13/cobra/doc"
 )
 

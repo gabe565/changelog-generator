@@ -9,7 +9,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/gabe565/changelog-generator/cmd"
+	"gabe565.com/changelog-generator/cmd"
 	"github.com/spf13/cobra/doc"
 	flag "github.com/spf13/pflag"
 )

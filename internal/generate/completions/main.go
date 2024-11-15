@@ -7,7 +7,7 @@ import (
 	"path/filepath"
 	"time"
 
-	"github.com/gabe565/changelog-generator/cmd"
+	"gabe565.com/changelog-generator/cmd"
 	flag "github.com/spf13/pflag"
 )
 

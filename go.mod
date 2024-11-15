@@ -1,4 +1,4 @@
-module github.com/gabe565/changelog-generator
+module gabe565.com/changelog-generator
 
 go 1.23.3
 

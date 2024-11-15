@@ -4,8 +4,8 @@ import (
 	"errors"
 	"io"
 
-	"github.com/gabe565/changelog-generator/internal/config"
-	"github.com/gabe565/changelog-generator/internal/git"
+	"gabe565.com/changelog-generator/internal/config"
+	"gabe565.com/changelog-generator/internal/git"
 	"github.com/spf13/cobra"
 )
 

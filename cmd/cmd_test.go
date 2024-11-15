@@ -8,7 +8,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/gabe565/changelog-generator/internal/config"
+	"gabe565.com/changelog-generator/internal/config"
 	"github.com/go-git/go-git/v5"
 	"github.com/go-git/go-git/v5/plumbing"
 	"github.com/go-git/go-git/v5/plumbing/object"

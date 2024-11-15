@@ -4,7 +4,7 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/gabe565/changelog-generator/internal/config"
+	"gabe565.com/changelog-generator/internal/config"
 	"github.com/spf13/cobra"
 )
 

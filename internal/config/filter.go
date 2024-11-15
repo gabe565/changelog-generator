@@ -3,7 +3,7 @@ package config
 import (
 	"regexp"
 
-	"github.com/gabe565/changelog-generator/internal/util"
+	"gabe565.com/changelog-generator/internal/util"
 	"github.com/go-git/go-git/v5/plumbing/object"
 )
 
