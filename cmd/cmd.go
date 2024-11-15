@@ -3,6 +3,9 @@ package cmd
 import (
 	"errors"
 	"io"
+	"os"
+	"path/filepath"
+	"strings"
 
 	"gabe565.com/changelog-generator/internal/config"
 	"gabe565.com/changelog-generator/internal/git"
@@ -12,11 +15,22 @@ import (
 )
 
 func New(opts ...cobrax.Option) *cobra.Command {
+	name := "changelog-generator"
+	var annotations map[string]string
+	if base := filepath.Base(os.Args[0]); strings.HasPrefix(base, "git-") {
+		// Installed as a git plugin
+		name = base
+		annotations = map[string]string{
+			cobra.CommandDisplayNameAnnotation: strings.Replace(base, "-", " ", 1),
+		}
+	}
+
 	cmd := &cobra.Command{
-		Use:   "changelog-generator",
+		Use:   name,
 		Short: "Generates a changelog from commits since the previous release",
 		RunE:  run,
 
+		Annotations:       annotations,
 		Args:              cobra.NoArgs,
 		ValidArgsFunction: cobra.NoFileCompletions,
 		DisableAutoGenTag: true,
