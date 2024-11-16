@@ -10,7 +10,6 @@ import (
 	"gabe565.com/changelog-generator/internal/config"
 	"gabe565.com/changelog-generator/internal/git"
 	"gabe565.com/utils/cobrax"
-	"gabe565.com/utils/must"
 	"github.com/spf13/cobra"
 )
 
@@ -43,10 +42,6 @@ func New(opts ...cobrax.Option) *cobra.Command {
 }
 
 func run(cmd *cobra.Command, _ []string) error {
-	if shell := must.Must2(cmd.Flags().GetString(config.FlagCompletion)); shell != "" {
-		return completion(cmd, shell)
-	}
-
 	conf, err := config.Load(cmd)
 	if err != nil {
 		return err
