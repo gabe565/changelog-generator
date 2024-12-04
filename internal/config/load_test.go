@@ -15,31 +15,24 @@ import (
 
 type stubCmd struct {
 	*cobra.Command
-	tempPath string
+	tempDir string
 }
 
 func newStubCmd(t *testing.T) *stubCmd {
-	temp, err := os.MkdirTemp("", "changelog-generator-")
-	require.NoError(t, err)
-	cmd := &stubCmd{Command: &cobra.Command{}, tempPath: temp}
+	cmd := &stubCmd{Command: &cobra.Command{}, tempDir: t.TempDir()}
 	cmd.Flags().String(FlagConfig, "", "")
 	cmd.Flags().String(FlagRepo, ".", "")
 	return cmd
-}
-
-func (s *stubCmd) close() {
-	_ = os.RemoveAll(s.tempPath)
 }
 
 func TestLoad(t *testing.T) {
 	t.Parallel()
 	t.Run("no config file", func(t *testing.T) {
 		cmd := newStubCmd(t)
-		t.Cleanup(cmd.close)
 
-		_, err := git.PlainInit(cmd.tempPath, false)
+		_, err := git.PlainInit(cmd.tempDir, false)
 		require.NoError(t, err)
-		require.NoError(t, cmd.Flags().Set(FlagRepo, cmd.tempPath))
+		require.NoError(t, cmd.Flags().Set(FlagRepo, cmd.tempDir))
 
 		conf, err := Load(cmd.Command)
 		require.NoError(t, err)
@@ -64,7 +57,6 @@ func TestLoad(t *testing.T) {
 		t.Run("loads config at "+tt.path, func(t *testing.T) {
 			t.Parallel()
 			cmd := newStubCmd(t)
-			t.Cleanup(cmd.close)
 
 			data := `filters:
   exclude:
@@ -89,7 +81,7 @@ groups:
 				require.NoError(t, scanner.Err())
 			}
 
-			path := filepath.Join(cmd.tempPath, tt.path)
+			path := filepath.Join(cmd.tempDir, tt.path)
 			require.NoError(t, cmd.Flags().Set(FlagConfig, path))
 			require.NoError(t, os.WriteFile(path, []byte(data), 0o666))
 

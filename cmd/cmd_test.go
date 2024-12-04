@@ -42,20 +42,14 @@ func Test_buildVersion(t *testing.T) {
 
 type stubCmd struct {
 	*cobra.Command
-	tempPath string
+	tempDir string
 }
 
 func newStubCmd(t *testing.T) *stubCmd {
-	temp, err := os.MkdirTemp("", "changelog-generator-")
-	require.NoError(t, err)
-	cmd := &stubCmd{Command: New(), tempPath: temp}
-	require.NoError(t, cmd.Flags().Set(config.FlagRepo, cmd.tempPath))
+	cmd := &stubCmd{Command: New(), tempDir: t.TempDir()}
+	require.NoError(t, cmd.Flags().Set(config.FlagRepo, cmd.tempDir))
 	cmd.SetArgs([]string{})
 	return cmd
-}
-
-func (s *stubCmd) close() {
-	_ = os.RemoveAll(s.tempPath)
 }
 
 func stubAuthor() *object.Signature {
@@ -67,7 +61,7 @@ func stubAuthor() *object.Signature {
 }
 
 func commitFile(t *testing.T, w *git.Worktree, cmd *stubCmd, name string) plumbing.Hash {
-	require.NoError(t, os.WriteFile(filepath.Join(cmd.tempPath, name), []byte(name), 0o666))
+	require.NoError(t, os.WriteFile(filepath.Join(cmd.tempDir, name), []byte(name), 0o666))
 	_, err := w.Add(name)
 	require.NoError(t, err)
 
@@ -106,9 +100,8 @@ func Test_run(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 			cmd := newStubCmd(t)
-			t.Cleanup(cmd.close)
 
-			repo, err := git.PlainInit(cmd.tempPath, false)
+			repo, err := git.PlainInit(cmd.tempDir, false)
 			require.NoError(t, err)
 			w, err := repo.Worktree()
 			require.NoError(t, err)
