@@ -49,7 +49,7 @@ func run(cmd *cobra.Command, _ []string) error {
 
 	cmd.SilenceUsage = true
 
-	repo, err := git.FindRepo(cmd)
+	repo, err := git.PlainOpen(cmd)
 	if err != nil {
 		return err
 	}

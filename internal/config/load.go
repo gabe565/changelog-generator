@@ -26,6 +26,27 @@ func Load(cmd *cobra.Command) (*Config, error) {
 		return nil, err
 	}
 
+	// Find repo root
+	var repoPath string
+	if repoFlag := cmd.Flags().Lookup(FlagRepo); repoFlag.Changed {
+		abs, err := filepath.Abs(repoFlag.Value.String())
+		if err != nil {
+			return nil, err
+		}
+		repoPath = abs
+	} else {
+		wd, err := os.Getwd()
+		if err != nil {
+			return nil, err
+		}
+		repoPath = wd
+	}
+	repoPath, err := findGitRoot(repoPath)
+	if err != nil {
+		return nil, err
+	}
+	must.Must(cmd.Flags().Set(FlagRepo, repoPath))
+
 	// Find config file
 	cfgFiles := make([]string, 0, 4)
 	cfgFile := must.Must2(cmd.Flags().GetString(FlagConfig))

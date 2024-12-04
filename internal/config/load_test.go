@@ -7,6 +7,7 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/go-git/go-git/v5"
 	"github.com/spf13/cobra"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -35,6 +36,10 @@ func TestLoad(t *testing.T) {
 	t.Run("no config file", func(t *testing.T) {
 		cmd := newStubCmd(t)
 		t.Cleanup(cmd.close)
+
+		_, err := git.PlainInit(cmd.tempPath, false)
+		require.NoError(t, err)
+		require.NoError(t, cmd.Flags().Set(FlagRepo, cmd.tempPath))
 
 		conf, err := Load(cmd.Command)
 		require.NoError(t, err)

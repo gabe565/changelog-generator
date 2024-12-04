@@ -13,14 +13,12 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var ErrNotAGitRepository = errors.New("not a git repository (or any of the parent directories)")
-
-func FindRepo(cmd *cobra.Command) (*git.Repository, error) {
+func PlainOpen(cmd *cobra.Command) (*git.Repository, error) {
 	repoPath := must.Must2(cmd.Flags().GetString(config.FlagRepo))
-	repo, err := git.PlainOpenWithOptions(repoPath, &git.PlainOpenOptions{DetectDotGit: true})
+	repo, err := git.PlainOpen(repoPath)
 	if err != nil {
 		if errors.Is(err, git.ErrRepositoryNotExists) {
-			return nil, fmt.Errorf("%w: %s", ErrNotAGitRepository, repoPath)
+			return nil, fmt.Errorf("%w: %s", config.ErrNotAGitRepository, repoPath)
 		}
 		return nil, fmt.Errorf("%w: %s", err, repoPath)
 	}
