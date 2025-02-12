@@ -1,9 +1,9 @@
 package config
 
 import (
+	"cmp"
 	"regexp"
 	"slices"
-	"strings"
 
 	"gabe565.com/changelog-generator/internal/util"
 	"github.com/go-git/go-git/v5/plumbing/object"
@@ -41,11 +41,11 @@ func (g *Group) Sort(sort string) {
 	switch sort {
 	case SortAscending:
 		slices.SortStableFunc(g.Commits, func(a, b *object.Commit) int {
-			return strings.Compare(a.Message, b.Message)
+			return cmp.Compare(a.Message, b.Message)
 		})
 	case SortDescending:
 		slices.SortStableFunc(g.Commits, func(a, b *object.Commit) int {
-			return strings.Compare(b.Message, a.Message)
+			return cmp.Compare(b.Message, a.Message)
 		})
 	}
 }

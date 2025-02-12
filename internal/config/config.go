@@ -1,6 +1,7 @@
 package config
 
 import (
+	"cmp"
 	"slices"
 )
 
@@ -25,7 +26,7 @@ func (c *Config) String() string {
 	var result string
 	result += "## Changelog\n"
 	slices.SortStableFunc(c.Groups, func(a, b *Group) int {
-		return a.Order - b.Order
+		return cmp.Compare(a.Order, b.Order)
 	})
 	var hasPrinted bool
 	for _, g := range c.Groups {
