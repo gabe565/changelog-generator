@@ -1,7 +1,6 @@
 package config
 
 import (
-	"bufio"
 	"os"
 	"path/filepath"
 	"strings"
@@ -74,16 +73,14 @@ groups:
 			if tt.isGoReleaser {
 				orig := data
 				data = "changelog:\n"
-				scanner := bufio.NewScanner(strings.NewReader(orig))
-				for scanner.Scan() {
-					data += "  " + scanner.Text() + "\n"
+				for line := range strings.Lines(orig) {
+					data += "  " + line + "\n"
 				}
-				require.NoError(t, scanner.Err())
 			}
 
 			path := filepath.Join(cmd.tempDir, tt.path)
 			require.NoError(t, cmd.Flags().Set(FlagConfig, path))
-			require.NoError(t, os.WriteFile(path, []byte(data), 0o666))
+			require.NoError(t, os.WriteFile(path, []byte(data), 0o600))
 
 			conf, err := Load(cmd.Command)
 			require.NoError(t, err)
