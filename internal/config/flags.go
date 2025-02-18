@@ -1,7 +1,6 @@
 package config
 
 import (
-	"gabe565.com/utils/cobrax"
 	"gabe565.com/utils/must"
 	"github.com/spf13/cobra"
 )
@@ -12,8 +11,6 @@ const (
 )
 
 func RegisterFlags(cmd *cobra.Command) {
-	must.Must(cobrax.RegisterCompletionFlag(cmd))
-
 	cmd.Flags().String(FlagConfig, "", `Config file (default ".changelog-generator.yaml")`)
 	must.Must(cmd.RegisterFlagCompletionFunc(FlagConfig, func(_ *cobra.Command, _ []string, _ string) ([]string, cobra.ShellCompDirective) {
 		return []string{"yaml"}, cobra.ShellCompDirectiveFilterFileExt
