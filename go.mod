@@ -3,7 +3,7 @@ module gabe565.com/changelog-generator
 go 1.24.0
 
 require (
-	gabe565.com/utils v0.0.0-20250218053544-40f17d09c725
+	gabe565.com/utils v0.0.0-20250302063333-ede73b14282c
 	github.com/go-git/go-git/v5 v5.14.0
 	github.com/knadh/koanf/parsers/yaml v0.1.0
 	github.com/knadh/koanf/providers/confmap v0.1.0
