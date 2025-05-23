@@ -48,7 +48,7 @@ jobs:
         with:
           fetch-depth: 0
       - name: Generate Changelog
-        uses: gabe565/changelog-generator-action@v1
+        uses: gabe565/changelog-generator@v1
         id: changelog
       - name: Release
         uses: softprops/action-gh-release@v2
