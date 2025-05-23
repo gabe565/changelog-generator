@@ -25,15 +25,18 @@ abbrev: 8
 groups:
   - title: Breaking Changes
     order: 0
-    regexp: "^.+?!:"
+    regexp: '!:'
   - title: Features
     order: 1
-    regexp: "^(feat)"
+    regexp: '^(feat)'
   - title: Fixes
     order: 2
-    regexp: "^(fix|perf)"
-  - title: Others
+    regexp: '^(fix|perf)'
+  - title: Dependencies
     order: 999
+    regexp: '\(deps\):'
+  - title: Others
+    order: 998
 
 # Divider that will be added between each group
 #
