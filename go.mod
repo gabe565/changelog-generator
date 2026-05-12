@@ -3,16 +3,16 @@ module gabe565.com/changelog-generator
 go 1.24.0
 
 require (
-	gabe565.com/utils v0.0.0-20250302063333-ede73b14282c
+	gabe565.com/utils v0.0.0-20260511235214-4059440fa83b
 	github.com/go-git/go-git/v5 v5.14.0
 	github.com/knadh/koanf/parsers/yaml v0.1.0
 	github.com/knadh/koanf/providers/confmap v0.1.0
 	github.com/knadh/koanf/providers/file v1.1.2
 	github.com/knadh/koanf/providers/structs v0.1.0
 	github.com/knadh/koanf/v2 v2.1.2
-	github.com/spf13/cobra v1.9.1
-	github.com/spf13/pflag v1.0.6
-	github.com/stretchr/testify v1.10.0
+	github.com/spf13/cobra v1.10.1
+	github.com/spf13/pflag v1.0.10
+	github.com/stretchr/testify v1.11.1
 )
 
 require (
